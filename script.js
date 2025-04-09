@@ -1,3 +1,16 @@
+
+// Mostrar o jogo após clicar em "Compreendi"
+window.addEventListener('DOMContentLoaded', () => {
+  const popup = document.getElementById('popup');
+  const gameContainer = document.getElementById('gameContainer');
+  const startBtn = document.getElementById('startGame');
+
+  startBtn.addEventListener('click', () => {
+    popup.style.display = 'none';
+    gameContainer.classList.remove('hidden');
+  });
+});
+
 const audio = document.getElementById('audio');
 const playBtn = document.getElementById('playBtn');
 const nextBtn = document.getElementById('next');
