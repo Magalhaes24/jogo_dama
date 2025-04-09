@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,8 +7,28 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>🎵 Adivinha a música dos D.A.M.A.🎵</h1>
+  <!-- POP-UP DE INSTRUÇÕES -->
+  <div id="popup" class="popup-overlay">
+    <div class="popup-content">
+      <h2>Como Jogar 🎧</h2>
+      <p>
+        O teu objetivo é adivinhar o nome da música.<br><br>
+        - Ouve um excerto de <strong>2 segundos</strong> da música.<br>
+        - Se não conseguires adivinhar, carrega em <strong>\"Next\"</strong> para ouvir <strong>10 segundos</strong>.<br>
+        - Depois, poderás ouvir <strong>30 segundos</strong>.<br><br>
+        Tens <strong>3 tentativas no total por música</strong> para acertar.<br>
+        - Se acertares com 2s, ganhas <strong>10 pontos</strong>.<br>
+        - Com 10s ganhas <strong>3 pontos</strong>.<br>
+        - Com 30s ganhas <strong>1 ponto</strong>.<br><br>
+        Se falhares 3 vezes ou chegares ao fim dos 30 segundos sem sucesso, perdes essa ronda e vês a solução.
+      </p>
+      <button id="startGame">Compreendi</button>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO DO JOGO -->
+  <div class="container hidden" id="gameContainer">
+    <h1>🎵 Adivinha a música dos D.A.M.A. 🎵</h1>
     <p id="score">Score: 0</p>
     <audio id="audio"></audio>
 
@@ -17,12 +37,12 @@
     </div>
 
     <div class="guess-section">
-      <input type="text" id="guessInput" placeholder="Song name..." />
-      <button id="submitGuess">Submit</button>
+      <input type="text" id="guessInput" placeholder="Nome da música..." />
+      <button id="submitGuess">Submeter</button>
       <p id="guessResult"></p>
     </div>
 
-    <p id="attempts">❌ Attempts: 0 / 3</p>
+    <p id="attempts">❌ Tentativas: 0 / 3</p>
 
     <button id="next">Next</button>
     <p id="song-name" class="hidden"></p>
