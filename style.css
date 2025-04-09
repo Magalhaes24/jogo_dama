@@ -1,0 +1,117 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #1a1a1a;
+  color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  text-align: center;
+  padding: 2rem;
+  background: #2c2c2c;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  width: 90%;
+  max-width: 600px;
+  box-sizing: border-box;
+}
+
+button {
+  margin: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+button:hover {
+  background: #45a049;
+}
+
+.hidden {
+  display: none;
+}
+
+#song-name {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #ccc;
+}
+
+#score {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffd700;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+.guess-section {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#guessInput {
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 300px;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  margin-bottom: 0.5rem;
+  box-sizing: border-box;
+}
+
+#submitGuess {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #2196f3;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+}
+
+#guessResult {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+#attempts {
+  font-size: 1rem;
+  color: #ff6961;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  button, #submitGuess {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+
+  #guessInput {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+}

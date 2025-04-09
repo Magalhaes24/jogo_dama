@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo dos D.A.M.A.</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🎵 Adivinha a música dos D.A.M.A.🎵</h1>
+    <p id="score">Score: 0</p>
+    <audio id="audio"></audio>
+
+    <div class="buttons">
+      <button id="playBtn">Play 2s</button>
+    </div>
+
+    <div class="guess-section">
+      <input type="text" id="guessInput" placeholder="Song name..." />
+      <button id="submitGuess">Submit</button>
+      <p id="guessResult"></p>
+    </div>
+
+    <p id="attempts">❌ Attempts: 0 / 3</p>
+
+    <button id="next">Next</button>
+    <p id="song-name" class="hidden"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
