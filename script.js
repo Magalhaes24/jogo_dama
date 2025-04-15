@@ -40,7 +40,6 @@ const songList = [
   { path: 'songs/D.A.M.A - Quer.mp3', answer: 'Quer' },
   { path: 'songs/D.A.M.A - JNQF.mp3', answer: 'JNQF' },
   { path: 'songs/D.A.M.A - O Maior (Official Lyric Video).mp3', answer: 'O Maior' },
-  { path: 'songs/D.A.M.A - Só Quero Você.mp3', answer: 'Só Quero Você' }
 ];
 
 function shuffleArray(array) {
