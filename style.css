@@ -183,3 +183,35 @@ button:hover {
     margin-right: 0;
   }
 }
+
+/* Specific styling for the Choose Playlist popup */
+#choosePlaylistContainer .popup-content {
+  text-align: center;
+}
+
+#playlistInput {
+  width: 100%;
+  max-width: 350px;
+  padding: 0.7rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  box-sizing: border-box;
+}
+
+#confirmPlaylist {
+  margin-top: 1rem;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#confirmPlaylist:hover {
+  background-color: #45a049;
+}
