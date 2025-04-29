@@ -1,152 +1,59 @@
+const clientId = "e1141482037c4c08a0d9670a936a0a9d";
+const clientSecret = "9862fc5d083d42af8c3035035b55cb57";
 
-// Mostrar o jogo após clicar em "Compreendi"
-window.addEventListener('DOMContentLoaded', () => {
-  const popup = document.getElementById('popup');
-  const gameContainer = document.getElementById('gameContainer');
-  const startBtn = document.getElementById('startGame');
+const spotifyEmbed = document.getElementById("spotify-embed");
+const guessInput = document.getElementById("guessInput");
+const submitGuess = document.getElementById("submitGuess");
+const guessResult = document.getElementById("guessResult");
+const scoreDisplay = document.getElementById("score");
+const attemptsDisplay = document.getElementById("attempts");
+const nextBtn = document.getElementById("next");
+const listenBtn = document.getElementById("listen");
+const songNameDisplay = document.getElementById("song-name");
 
-  startBtn.addEventListener('click', () => {
-    popup.style.display = 'none';
-    gameContainer.classList.remove('hidden');
-  });
-});
+const choosePlaylistContainer = document.getElementById("choosePlaylistContainer");
+const playlistInput = document.getElementById("playlistInput");
+const confirmPlaylistBtn = document.getElementById("confirmPlaylist");
 
-const audio = document.getElementById('audio');
-const playBtn = document.getElementById('playBtn');
-const nextBtn = document.getElementById('next');
-const songNameDisplay = document.getElementById('song-name');
-const guessInput = document.getElementById('guessInput');
-const submitGuess = document.getElementById('submitGuess');
-const guessResult = document.getElementById('guessResult');
-const scoreDisplay = document.getElementById('score');
-const attemptsDisplay = document.getElementById('attempts');
-
-// Lista de músicas
-const songList = [
-  { path: 'songs/D.A.M.A - Agora é Tarde (Official Lyric Video).mp3', answer: 'Agora é Tarde' },
-  { path: 'songs/D.A.M.A - Às Vezes (Official Lyric Video).mp3', answer: 'Às Vezes' },
-  { path: 'songs/D.A.M.A - Casa feat Buba Espinho.mp3', answer: 'Casa' },
-  { path: 'songs/D.A.M.A - Era Eu.mp3', answer: 'Era Eu' },
-  { path: 'songs/D.A.M.A - Luísa.mp3', answer: 'Luísa' },
-  { path: 'songs/D.A.M.A - Mentiras.mp3', answer: 'Mentiras' },
-  { path: 'songs/D.A.M.A - Na Na Na (Official Lyric Video).mp3', answer: 'Na Na Na' },
-  { path: 'songs/D.A.M.A - Não Dá (Official Lyric Video).mp3', answer: 'Não Dá' },
-  { path: 'songs/D.A.M.A - Não Faço Questão ft. Gabriel O Pensador (Official Lyric Video).mp3', answer: 'Não Faço Questão' },
-  { path: 'songs/D.A.M.A - Secrets in Silence ft. Mia Rose.mp3', answer: 'Secrets in Silence' },
-  { path: 'songs/D.A.M.A - Sente a Minha Magia.mp3', answer: 'Sente a Minha Magia' },
-  { path: 'songs/D.A.M.A - Tempo pra Quê ft. Player (Official Lyric Video).mp3', answer: 'Tempo pra Quê' },
-  { path: 'songs/D.A.M.A - Balada do Desajeitado feat. Salvador Seixas.mp3', answer: 'Balada do Desajeitado' },
-  { path: 'songs/D.A.M.A - Popless.mp3', answer: 'Popless' },
-  { path: 'songs/D.A.M.A - Quer.mp3', answer: 'Quer' },
-  { path: 'songs/D.A.M.A - JNQF.mp3', answer: 'JNQF' },
-  { path: 'songs/D.A.M.A - O Maior (Official Lyric Video).mp3', answer: 'O Maior' },
-];
-
-function shuffleArray(array) {
-  const copy = [...array];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
-const shuffledList = shuffleArray(songList);
-
+let playlistTracks = [];
+let playlistUrl = "";
 let currentSongIndex = 0;
-let stage = 1; // 1: 2s, 2: 10s, 3: 30s
 let guessedCorrectly = false;
 let score = 0;
 let attempts = 0;
 const maxAttempts = 3;
 let readyForNextSong = false;
+let playStage = 0; // 0 = 1s, 1 = 5s, 2 = 10s
 
-function loadSong(index) {
-  if (index >= shuffledList.length) {
-    alert("🎉 Game over! Final Score: " + score);
-    nextBtn.disabled = true;
-    playBtn.disabled = true;
-    submitGuess.disabled = true;
-    return;
-  }
-
-  audio.src = shuffledList[index].path;
-  stage = 1;
-  guessedCorrectly = false;
-  attempts = 0;
-  readyForNextSong = false;
-
-  updatePlayButton();
-
-  guessInput.value = '';
-  guessResult.textContent = '';
-  songNameDisplay.classList.add('hidden');
-  nextBtn.textContent = 'Next';
-  playBtn.disabled = false;
-  submitGuess.disabled = false;
-  updateAttemptsDisplay();
+function normalize(s) {
+  return s
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
 }
 
-function updateAttemptsDisplay() {
-  attemptsDisplay.textContent = `❌ Attempts: ${attempts} / ${maxAttempts}`;
-}
-
-function playClip(seconds) {
-  audio.currentTime = 0;
-  audio.play();
-  setTimeout(() => {
-    audio.pause();
-  }, seconds * 1000);
-}
-
-function updatePlayButton() {
-  if (stage === 1) {
-    playBtn.textContent = 'Play 2s';
-    playBtn.classList.remove('hidden');
-  } else if (stage === 2) {
-    playBtn.textContent = 'Play 10s';
-    playBtn.classList.remove('hidden');
-  } else if (stage === 3) {
-    playBtn.textContent = 'Play 30s';
-    playBtn.classList.remove('hidden');
-  } else {
-    playBtn.classList.add('hidden');
-  }
-}
-
-playBtn.onclick = () => {
-  if (stage === 1) playClip(2);
-  if (stage === 2) playClip(10);
-  if (stage === 3) playClip(30);
-};
-
-nextBtn.onclick = () => {
-  if (!guessedCorrectly && !readyForNextSong) {
-    // Avança de fase (2s → 10s → 30s)
-    if (stage < 3) {
-      stage++;
-      updatePlayButton();
-      nextBtn.textContent = stage === 3 ? 'Show Answer' : 'Next';
-    } else {
-      // Mostra solução se já está no 30s
-      showAnswer(false);
+function levenshtein(a, b) {
+  const an = a.length, bn = b.length;
+  if (an === 0) return bn;
+  if (bn === 0) return an;
+  const matrix = Array.from({ length: bn + 1 }, () => []);
+  for (let i = 0; i <= bn; i++) matrix[i][0] = i;
+  for (let j = 0; j <= an; j++) matrix[0][j] = j;
+  for (let i = 1; i <= bn; i++) {
+    for (let j = 1; j <= an; j++) {
+      const cost = b[i - 1] === a[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i-1][j] + 1,
+        matrix[i][j-1] + 1,
+        matrix[i-1][j-1] + cost
+      );
     }
-  } else {
-    // Carrega a próxima música
-    currentSongIndex++;
-    loadSong(currentSongIndex);
   }
-};
+  return matrix[bn][an];
+}
 
 function similarity(a, b) {
-  const clean = s => s.toLowerCase().replace(/[^a-z0-9]/gi, '');
-  a = clean(a);
-  b = clean(b);
-  let matches = 0;
-  for (let i = 0; i < Math.min(a.length, b.length); i++) {
-    if (a[i] === b[i]) matches++;
-  }
-  return matches / Math.max(a.length, b.length);
+  return 1 - levenshtein(a, b) / Math.max(a.length, b.length);
 }
 
 function updateScore(points) {
@@ -154,69 +61,188 @@ function updateScore(points) {
   scoreDisplay.textContent = `Score: ${score}`;
 }
 
-function showAnswer(success) {
-  const fullAnswer = shuffledList[currentSongIndex].answer;
-  songNameDisplay.textContent = `🎶 It was: ${fullAnswer}`;
-  songNameDisplay.classList.remove('hidden');
-  nextBtn.textContent = 'Next Song';
-  playBtn.classList.add('hidden');
-  submitGuess.disabled = true;
-  readyForNextSong = true;
+function updateAttempts() {
+  attemptsDisplay.textContent = `❌ Tentativas: ${attempts} / ${maxAttempts}`;
+}
 
-  if (!success) {
-    guessResult.textContent = '❌ You lost this round!';
-    guessResult.style.color = 'tomato';
+function showAnswer(success) {
+  const track = playlistTracks[currentSongIndex];
+  songNameDisplay.textContent = `🎶 Era: ${track.name} - ${track.artists}`;
+  songNameDisplay.classList.remove("hidden");
+  spotifyEmbed.style.visibility = "visible";
+
+  guessResult.textContent = success ? '✅ Correcto!' : '❌ Falhaste!';
+  guessResult.style.color = success ? 'lightgreen' : 'tomato';
+  readyForNextSong = true;
+  submitGuess.disabled = true;
+  nextBtn.textContent = "⏭️ Próxima Música";
+}
+
+function loadSong(index) {
+  if (index >= playlistTracks.length) {
+    alert(`🎉 Jogo terminado! Pontuação final: ${score}`);
+    return;
+  }
+
+  const track = playlistTracks[index];
+  spotifyEmbed.src = `https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`;
+  spotifyEmbed.style.visibility = "hidden";
+
+  guessInput.value = "";
+  guessResult.textContent = "";
+  songNameDisplay.classList.add("hidden");
+  attempts = 0;
+  guessedCorrectly = false;
+  readyForNextSong = false;
+  playStage = 0;
+  submitGuess.disabled = false;
+  nextBtn.textContent = "⏭️ Avançar";
+  updateListenButton();
+  updateAttempts();
+}
+
+function updateListenButton() {
+  if (playStage === 0) {
+    listenBtn.textContent = "🔊 Ouvir 1s";
+  } else if (playStage === 1) {
+    listenBtn.textContent = "🔊 Ouvir 5s";
+  } else if (playStage === 2) {
+    listenBtn.textContent = "🔊 Ouvir 10s";
   }
 }
 
 submitGuess.onclick = () => {
-  const userGuess = guessInput.value.trim();
-  const fullAnswer = shuffledList[currentSongIndex].answer;
+  const userGuess = normalize(guessInput.value.trim());
+  const correct = normalize(playlistTracks[currentSongIndex].name);
+  const sim = similarity(userGuess, correct);
 
-  const featSplit = fullAnswer.split(/ft\.|feat\./i);
-  const mainTitle = featSplit[0].trim();
-  const featuredPart = featSplit[1] ? featSplit[1].trim() : null;
-
-  const normalize = s => s
-    .toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]/gi, '');
-
-  const sim = similarity(normalize(userGuess), normalize(mainTitle));
-
-  if (sim > 0.6) {
+  if (sim > 0.75) {
     if (!guessedCorrectly) {
-      let points = 0;
-      if (stage === 1) points = 10;
-      else if (stage === 2) points = 3;
-      else if (stage === 3) points = 1;
-
-      if (featuredPart) {
-        const includesFeat = normalize(userGuess).includes(normalize(featuredPart));
-        if (includesFeat) {
-          points += 1;
-        }
-      }
-
-      updateScore(points);
+      if (playStage === 0) updateScore(10);
+      else if (playStage === 1) updateScore(3);
+      else updateScore(1);
     }
-
-    guessResult.textContent = '✅ Correct!';
-    guessResult.style.color = 'lightgreen';
     guessedCorrectly = true;
-
     showAnswer(true);
   } else {
     attempts++;
-    updateAttemptsDisplay();
-
+    updateAttempts();
     if (attempts >= maxAttempts) {
       showAnswer(false);
     } else {
-      guessResult.textContent = '❌ Try again!';
+      guessResult.textContent = '❌ Tenta outra vez!';
       guessResult.style.color = 'tomato';
     }
   }
 };
 
-loadSong(currentSongIndex);
+listenBtn.onclick = async () => {
+  if (readyForNextSong) return;
+
+  if (playStage === 0) {
+    await playPreview(1000);
+  } else if (playStage === 1) {
+    await playPreview(5000);
+  } else if (playStage === 2) {
+    await playPreview(10000);
+  }
+};
+
+nextBtn.onclick = () => {
+  if (readyForNextSong) {
+    currentSongIndex++;
+    loadSong(currentSongIndex);
+    return;
+  }
+
+  if (playStage === 0) {
+    playStage = 1;
+    updateListenButton();
+  } else if (playStage === 1) {
+    playStage = 2;
+    updateListenButton();
+  } else if (playStage === 2) {
+    showAnswer(false);
+  }
+};
+
+async function playPreview(durationMs) {
+  const iframe = document.getElementById("spotify-embed");
+  const track = playlistTracks[currentSongIndex];
+
+  iframe.src = `https://open.spotify.com/embed/track/${track.id}?utm_source=generator&theme=0`;
+
+  // Do not make visible, only sound
+  await new Promise(resolve => setTimeout(resolve, durationMs));
+
+  iframe.src = '';
+}
+
+async function getAccessToken() {
+  const credentials = btoa(`${clientId}:${clientSecret}`);
+  const res = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: {
+      "Authorization": `Basic ${credentials}`,
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: "grant_type=client_credentials"
+  });
+  const data = await res.json();
+  return data.access_token;
+}
+
+function extractPlaylistId(url) {
+  const match = url.match(/playlist\/([a-zA-Z0-9]+)/);
+  return match ? match[1] : null;
+}
+
+async function fetchTracks(token, playlistId) {
+  const res = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await res.json();
+  return data.items
+    .filter(item => item.track && item.track.id)
+    .map(item => ({
+      id: item.track.id,
+      name: item.track.name,
+      artists: item.track.artists.map(a => a.name).join(", ")
+    }));
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const popup = document.getElementById("popup");
+  const startBtn = document.getElementById("startGame");
+  const gameContainer = document.getElementById("gameContainer");
+
+  startBtn.addEventListener("click", () => {
+    popup.style.display = "none";
+    choosePlaylistContainer.classList.remove("hidden");
+  });
+
+  confirmPlaylistBtn.addEventListener("click", async () => {
+    const inputUrl = playlistInput.value.trim();
+    if (!inputUrl.includes("playlist/")) {
+      alert("Por favor insere um link de playlist válido do Spotify!");
+      return;
+    }
+    playlistUrl = inputUrl;
+
+    choosePlaylistContainer.style.display = "none";
+    gameContainer.classList.remove("hidden");
+
+    const token = await getAccessToken();
+    const playlistId = extractPlaylistId(playlistUrl);
+    playlistTracks = await fetchTracks(token, playlistId);
+
+    playlistTracks = playlistTracks.sort(() => Math.random() - 0.5);
+
+    console.log("🎧 Ordem das músicas para adivinhar:");
+    playlistTracks.forEach((track, index) => {
+      console.log(`${index + 1}. ${track.name} - ${track.artists}`);
+    });
+
+    loadSong(currentSongIndex);
+  });
+});
